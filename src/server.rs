@@ -6,6 +6,9 @@ use crate::util::target_addr::{read_address, TargetAddr};
 use crate::Socks5Command;
 use crate::{consts, AuthenticationMethod, ReplyError, Result, SocksError};
 use anyhow::Context;
+use serde_derive;
+use serde_derive::Deserialize;
+use serde_derive::Serialize;
 use std::future::Future;
 use std::io;
 use std::net::IpAddr;
@@ -22,7 +25,7 @@ use tokio::time::timeout;
 use tokio::try_join;
 use tokio_stream::Stream;
 
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Config {
     /// Timeout of the command request
     request_timeout: u64,
@@ -34,6 +37,7 @@ pub struct Config {
     execute_command: bool,
     /// Enable UDP support
     allow_udp: bool,
+    #[serde(skip_serializing, skip_deserializing)]
     auth: Option<Arc<dyn Authentication>>,
 }
 
